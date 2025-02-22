@@ -1,6 +1,7 @@
 name: Security audit with cargo-audit for scheduling-iam
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     paths: 
