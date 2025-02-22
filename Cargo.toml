@@ -1,0 +1,21 @@
+[package]
+name = "scheduling-iam"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4"
+anyhow = "1.0.95"
+chrono = "0.4.39"
+derive_builder = "0.20.2"
+rand = "0.9.0"
+thiserror = "2.0.11"
+uuid = { version = "1.13.1", features = [
+    "v4",
+    "fast-rng",
+    "macro-diagnostics",
+] }
+validator = { version = "0.20.0", features = ["derive"] }
+
+[target.x86_65-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
