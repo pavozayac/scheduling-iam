@@ -1,0 +1,92 @@
+name: Build and push Docker image
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    
+env:
+  APP_NAME: scheduling-iam
+  REGISTRY: ghcr.io
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  build-image:
+    name: build image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    if: github.event.pull_request.base.ref == 'develop' || github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.APP_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,format=short,prefix=,suffix=-${{ github.run_number }},enable=true
+      - name: Cache image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          outputs: type=cacheonly
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  push-image:
+    needs: build-image
+    name: push image to registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.APP_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,format=short,prefix=,suffix=-${{ github.run_number }},enable=true
+      - name: Push to registry
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.APP_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
