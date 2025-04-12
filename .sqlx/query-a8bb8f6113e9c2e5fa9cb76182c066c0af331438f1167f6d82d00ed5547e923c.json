@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select id, email, registered, date_created, date_updated from users\n            where id = $1\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "registered",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 3,
+        "name": "date_created",
+        "type_info": "Timestamp"
+      },
+      {
+        "ordinal": 4,
+        "name": "date_updated",
+        "type_info": "Timestamp"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a8bb8f6113e9c2e5fa9cb76182c066c0af331438f1167f6d82d00ed5547e923c"
+}

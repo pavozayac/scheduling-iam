@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            insert into users (id, email, registered, date_updated) values ($1, $2, $3, $4)\n            on conflict (id)\n            do update set\n            email = excluded.email,\n            registered = excluded.registered,\n            date_updated = excluded.date_updated;\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar",
+        "Bool",
+        "Timestamp"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7abf728c4041e3e83c531e4c500db1934b4ea5345331f180aaa3ba56da6e4fd9"
+}

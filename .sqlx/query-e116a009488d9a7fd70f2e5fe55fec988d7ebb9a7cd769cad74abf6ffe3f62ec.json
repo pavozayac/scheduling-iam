@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                insert into recovery_codes (user_id, code, date_created, date_updated)\n                values ($1, $2, $3, $4)\n                ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar",
+        "Timestamp",
+        "Timestamp"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e116a009488d9a7fd70f2e5fe55fec988d7ebb9a7cd769cad74abf6ffe3f62ec"
+}
