@@ -1,0 +1,3 @@
+[advisories]
+# RSA 0.9.8 side-channel vulnerability, comes from sqlx mysql feature
+ignore = ["RUSTSEC-2023-0071"]
