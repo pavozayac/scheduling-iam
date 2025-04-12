@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            update recovery_codes\n            set deleted = $2\n            where user_id = $1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Timestamp"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7aea2e20fabc087eff0324327c98cd57aaac06abb8fa771fc8bd4527536f7f3c"
+}

@@ -1,4 +1,3 @@
-use chrono::NaiveDateTime;
 use derive_builder::Builder;
 use uuid::Uuid;
 use validator::{self, ValidateLength};
@@ -11,8 +10,10 @@ pub struct RecoveryCode {
     code: String,
     #[builder(default = "false")]
     active: bool,
-    #[builder(default = "chrono::Utc::now().naive_utc()")]
-    date_created: NaiveDateTime,
+    #[builder(default = "chrono::Utc::now()")]
+    date_created: chrono::DateTime<chrono::Utc>,
+    #[builder(default = "chrono::Utc::now()")]
+    date_updated: chrono::DateTime<chrono::Utc>,
 }
 
 impl RecoveryCode {
@@ -26,6 +27,14 @@ impl RecoveryCode {
 
     pub fn active(&self) -> bool {
         self.active
+    }
+
+    pub fn date_created(&self) -> chrono::DateTime<chrono::Utc> {
+        self.date_created
+    }
+
+    pub fn date_updated(&self) -> chrono::DateTime<chrono::Utc> {
+        self.date_updated
     }
 }
 
@@ -75,6 +84,23 @@ mod tests {
 
         assert_eq!(code, recovery_code.code());
         assert_eq!(user_id, recovery_code.user_id());
+    }
+
+    #[test]
+    fn should_build_inactive_by_default() {
+        let user_id = Uuid::new_v4();
+        let code = "testcode12345678";
+
+        let recovery_code = RecoveryCodeBuilder::default()
+            .user_id(user_id)
+            .code(code.into())
+            .build();
+
+        assert!(recovery_code.is_ok());
+
+        let recovery_code = recovery_code.unwrap();
+
+        assert!(!recovery_code.active());
     }
 
     #[test]
