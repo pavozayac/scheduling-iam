@@ -1,4 +1,3 @@
-
 use scheduling_iam::{
     domain::{ports::repositories::UserRepository, user::UserBuilder},
     infrastructure::database::user_repository::PsqlUserRepository,

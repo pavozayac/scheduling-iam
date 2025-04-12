@@ -129,4 +129,3 @@ impl TryFrom<&OtpCodeQueryResult> for OtpCode {
         Ok(otp_code)
     }
 }
-
