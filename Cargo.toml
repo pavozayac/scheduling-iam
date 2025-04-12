@@ -8,12 +8,10 @@ actix-web = "4"
 anyhow = "1.0.95"
 async-trait = "0.1.88"
 async_once = "0.2.6"
-# chrono = "0.4.39"
-
 derive_builder = "0.20.2"
 lazy_static = "1.5.0"
 rand = "0.9.0"
-sqlx = { version = "0.7.3", features = [
+sqlx = { version = "0.8.3", features = [
     "postgres",
     "runtime-tokio",
     "time",
@@ -29,3 +27,6 @@ uuid = { version = "1.13.1", features = [
     "macro-diagnostics",
 ] }
 validator = { version = "0.20.0", features = ["derive"] }
+
+[lints.rust]
+unused = "allow"
