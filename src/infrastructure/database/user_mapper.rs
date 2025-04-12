@@ -12,8 +12,8 @@ impl PsqlUserMapper {
         otp_code_query: Option<OtpCodeQueryResult>,
         recovery_codes_query: &[RecoveryCodeQueryResult],
     ) -> anyhow::Result<User> {
-        let created_datetime = user_query.date_created.as_utc();
-        let updated_datetime = user_query.date_updated.as_utc();
+        let created_datetime = user_query.date_created.and_utc();
+        let updated_datetime = user_query.date_updated.and_utc();
 
         let recovery_codes = recovery_codes_query
             .iter()
@@ -44,16 +44,16 @@ pub struct UserQueryResult {
     pub id: uuid::Uuid,
     pub email: String,
     pub registered: bool,
-    pub date_created: sqlx::types::time::PrimitiveDateTime,
-    pub date_updated: sqlx::types::time::PrimitiveDateTime,
+    pub date_created: chrono::NaiveDateTime,
+    pub date_updated: chrono::NaiveDateTime,
 }
 
 #[derive(Debug)]
 pub struct RecoveryCodeQueryResult {
     pub user_id: uuid::Uuid,
     pub code: String,
-    pub date_created: sqlx::types::time::PrimitiveDateTime,
-    pub date_updated: sqlx::types::time::PrimitiveDateTime,
+    pub date_created: chrono::NaiveDateTime,
+    pub date_updated: chrono::NaiveDateTime,
 }
 
 impl TryFrom<RecoveryCodeQueryResult> for RecoveryCode {
@@ -63,8 +63,8 @@ impl TryFrom<RecoveryCodeQueryResult> for RecoveryCode {
         let recovery_code = RecoveryCodeBuilder::default()
             .user_id(value.user_id)
             .code(value.code)
-            .date_created(value.date_created.as_utc())
-            .date_updated(value.date_updated.as_utc())
+            .date_created(value.date_created.and_utc())
+            .date_updated(value.date_updated.and_utc())
             .build()?;
 
         Ok(recovery_code)
@@ -78,8 +78,8 @@ impl TryFrom<&RecoveryCodeQueryResult> for RecoveryCode {
         let recovery_code = RecoveryCodeBuilder::default()
             .user_id(value.user_id)
             .code(value.code.clone())
-            .date_created(value.date_created.as_utc())
-            .date_updated(value.date_updated.as_utc())
+            .date_created(value.date_created.and_utc())
+            .date_updated(value.date_updated.and_utc())
             .build()?;
 
         Ok(recovery_code)
@@ -91,9 +91,9 @@ pub struct OtpCodeQueryResult {
     pub id: uuid::Uuid,
     pub user_id: uuid::Uuid,
     pub code: String,
-    pub expires_at: sqlx::types::time::PrimitiveDateTime,
-    pub date_created: sqlx::types::time::PrimitiveDateTime,
-    pub date_updated: sqlx::types::time::PrimitiveDateTime,
+    pub expires_at: chrono::NaiveDateTime,
+    pub date_created: chrono::NaiveDateTime,
+    pub date_updated: chrono::NaiveDateTime,
 }
 
 impl TryFrom<OtpCodeQueryResult> for OtpCode {
@@ -104,9 +104,9 @@ impl TryFrom<OtpCodeQueryResult> for OtpCode {
             .id(value.id)
             .user_id(value.user_id)
             .code(value.code)
-            .expires_at(value.expires_at.as_utc())
-            .date_created(value.date_created.as_utc())
-            .date_updated(value.date_updated.as_utc())
+            .expires_at(value.expires_at.and_utc())
+            .date_created(value.date_created.and_utc())
+            .date_updated(value.date_updated.and_utc())
             .build()?;
 
         Ok(otp_code)
@@ -121,9 +121,9 @@ impl TryFrom<&OtpCodeQueryResult> for OtpCode {
             .id(value.id)
             .user_id(value.user_id)
             .code(value.code.clone())
-            .expires_at(value.expires_at.as_utc())
-            .date_created(value.date_created.as_utc())
-            .date_updated(value.date_updated.as_utc())
+            .expires_at(value.expires_at.and_utc())
+            .date_created(value.date_created.and_utc())
+            .date_updated(value.date_updated.and_utc())
             .build()?;
 
         Ok(otp_code)

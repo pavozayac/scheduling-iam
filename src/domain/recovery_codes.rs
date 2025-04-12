@@ -10,10 +10,10 @@ pub struct RecoveryCode {
     code: String,
     #[builder(default = "false")]
     active: bool,
-    #[builder(default = "time::UtcDateTime::now()")]
-    date_created: time::UtcDateTime,
-    #[builder(default = "time::UtcDateTime::now()")]
-    date_updated: time::UtcDateTime,
+    #[builder(default = "chrono::Utc::now()")]
+    date_created: chrono::DateTime<chrono::Utc>,
+    #[builder(default = "chrono::Utc::now()")]
+    date_updated: chrono::DateTime<chrono::Utc>,
 }
 
 impl RecoveryCode {
@@ -29,11 +29,11 @@ impl RecoveryCode {
         self.active
     }
 
-    pub fn date_created(&self) -> time::UtcDateTime {
+    pub fn date_created(&self) -> chrono::DateTime<chrono::Utc> {
         self.date_created
     }
 
-    pub fn date_updated(&self) -> time::UtcDateTime {
+    pub fn date_updated(&self) -> chrono::DateTime<chrono::Utc> {
         self.date_updated
     }
 }

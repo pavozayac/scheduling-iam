@@ -1,12 +1,10 @@
+use chrono::{DateTime, Utc};
 use sqlx::Transaction;
 
 use crate::{
     domain::{ports::repositories::UserRepository, user::User},
-    infrastructure::database::{
-        time_utils::utc_to_primitive_datetime,
-        user_mapper::{
-            OtpCodeQueryResult, PsqlUserMapper, RecoveryCodeQueryResult, UserQueryResult,
-        },
+    infrastructure::database::user_mapper::{
+        OtpCodeQueryResult, PsqlUserMapper, RecoveryCodeQueryResult, UserQueryResult,
     },
 };
 
@@ -23,7 +21,7 @@ impl PsqlUserRepository {
         txn: &mut Transaction<'_, sqlx::Postgres>,
         user: &User,
     ) -> anyhow::Result<()> {
-        let now_primitive = utc_to_primitive_datetime(time::UtcDateTime::now());
+        let now = Utc::now().naive_utc();
 
         sqlx::query!(
             "
@@ -37,7 +35,7 @@ impl PsqlUserRepository {
             user.user_id(),
             user.email(),
             user.registered(),
-            now_primitive,
+            now,
         )
         .execute(txn.as_mut())
         .await?;
@@ -49,7 +47,7 @@ impl PsqlUserRepository {
         txn: &mut Transaction<'_, sqlx::Postgres>,
         user: &User,
     ) -> anyhow::Result<()> {
-        let now_primitive = utc_to_primitive_datetime(time::UtcDateTime::now());
+        let now = Utc::now().naive_utc();
 
         sqlx::query!(
             "
@@ -58,7 +56,7 @@ impl PsqlUserRepository {
             where user_id = $1
             ",
             user.user_id(),
-            now_primitive,
+            now,
         )
         .execute(txn.as_mut())
         .await?;
@@ -72,9 +70,9 @@ impl PsqlUserRepository {
                 otp.id(),
                 otp.user_id(),
                 otp.code(),
-                utc_to_primitive_datetime(otp.expires_at()),
-                utc_to_primitive_datetime(otp.date_created()),
-                utc_to_primitive_datetime(otp.date_updated()),
+                otp.expires_at().naive_utc(),
+                otp.date_created().naive_utc(),
+                otp.date_updated().naive_utc(),
             )
             .execute(txn.as_mut())
             .await?;
@@ -87,7 +85,7 @@ impl PsqlUserRepository {
         txn: &mut Transaction<'_, sqlx::Postgres>,
         user: &User,
     ) -> anyhow::Result<()> {
-        let now_primitive = utc_to_primitive_datetime(time::UtcDateTime::now());
+        let now = Utc::now().naive_utc();
 
         sqlx::query!(
             "
@@ -96,7 +94,7 @@ impl PsqlUserRepository {
             where user_id = $1
             ",
             user.user_id(),
-            now_primitive,
+            now,
         )
         .execute(txn.as_mut())
         .await?;
@@ -109,8 +107,8 @@ impl PsqlUserRepository {
                 ",
                 recovery_code.user_id(),
                 recovery_code.code(),
-                utc_to_primitive_datetime(recovery_code.date_created()),
-                utc_to_primitive_datetime(recovery_code.date_updated()),
+                recovery_code.date_created().naive_utc(),
+                recovery_code.date_updated().naive_utc(),
             )
             .execute(txn.as_mut())
             .await?;

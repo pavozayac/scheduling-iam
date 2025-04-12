@@ -31,10 +31,10 @@ pub struct User {
     active_recovery_codes: Vec<RecoveryCode>,
     #[builder(default = "None")]
     active_otp: Option<OtpCode>,
-    #[builder(default = "time::UtcDateTime::now()")]
-    date_created: time::UtcDateTime,
-    #[builder(default = "time::UtcDateTime::now()")]
-    date_updated: time::UtcDateTime,
+    #[builder(default = "chrono::Utc::now()")]
+    date_created: chrono::DateTime<chrono::Utc>,
+    #[builder(default = "chrono::Utc::now()")]
+    date_updated: chrono::DateTime<chrono::Utc>,
 }
 
 impl User {
