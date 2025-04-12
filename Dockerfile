@@ -1,4 +1,4 @@
-FROM rust:1.82 AS base
+FROM rust:slim AS base
 RUN cargo install cargo-chef --locked --version ^0.1
 
 FROM base AS planner
