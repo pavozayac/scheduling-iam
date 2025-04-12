@@ -19,4 +19,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: taiki-e/install-action@cargo-audit
-      - run: cargo audit --audit-level high
+      - run: cargo audit
